@@ -35,7 +35,11 @@ class AdminerEditForeign extends Adminer\Plugin {
 						return;
 					}
 				}
-				return "<select$attrs>" . Adminer\optionlist($options, $value) . "</select>";
+				$sid = $field["field"];
+				$link = "<a target=_blank href='?server=".$_GET['server']."&username=".$_GET['username']."&db=".$_GET['db']."&edit=$target&where%5B$id%5D=$value'>$value</a>";
+				// when user choose a value, update the link to the referenced row in the foreign table
+				$script = Adminer\script("document.getElementById('$sid').addEventListener('change', function(e){var a=e.target.nextSibling,v=e.target.value;a.innerText=v;a.href=a.href.replace(/=[^=]+$/,'=')+v})");
+				return "<select$attrs id='$sid'>" . Adminer\optionlist($options, $value) . "</select>$link$script";
 			}
 		}
 	}
